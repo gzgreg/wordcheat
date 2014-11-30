@@ -7,7 +7,18 @@ Run the jarfile in the /bin folder.
 
 `buildDict` builds a dictionary from the provided words.txt file. A custom dictionary can also be provided with a filepath as an argument (must have words separated by newlines).
 
-`import` imports the file at the filepath given in the argument (`import board.txt`).
+`import` imports the board at the filepath given in the argument (`import board.txt`). Boards are formatted as follows:
+```
+abcdefghij
+asdblkajsh
+awkeuhfiuh
+bkhxkjhkjr
+fdkbhawbrg
+suhiawuhuh
+ALKJDHFKJH
+...
+```
+Capitals denote letters under your control.
 
 `analyze` analyzes the current board given.
 
