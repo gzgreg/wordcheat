@@ -20,8 +20,8 @@ ALKJDHFKJH
 ```
 Capitals denote letters under your control.
 
-`analyze` analyzes the current board given.
+`analyze` analyzes the current board given, and gives a list of possible words from the position given.
 
-`sort` sorts the dictionary. Can be sorted by height, length, and width (use `sort height`).
+`sort` sorts the word list. Can be sorted by height, length, and width (use `sort height`).
 
 `how` shows the spots taken for a specific word given in the argument.
