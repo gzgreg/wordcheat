@@ -16,6 +16,8 @@ public class WordCheatMain {
 		Tree dict = null;
 		ArrayList<WordAnalysisResult> analyzed = null;
 		
+		out.println("WordCheat started...");
+		out.flush();
 		while(true){
 			try{
 				String input = in.readLine();
@@ -31,7 +33,7 @@ public class WordCheatMain {
 				else if(input.startsWith("buildDict")){ //create dictionary tree
 					String fileName = input.substring(9).trim();
 					if(fileName.length() == 0){
-						fileName = "src/words.txt"; //default dictionary
+						fileName = "words.txt"; //default dictionary
 					}
 					dict = (new DictBuilder(fileName)).buildDict();
 					out.println("Build complete.");
