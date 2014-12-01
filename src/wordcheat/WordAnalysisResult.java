@@ -8,22 +8,24 @@ public class WordAnalysisResult {
 	private WordBoard board;
 	private int height;
 	private int width;
+	private int top;
+	private int bottom;
 	
 	public WordAnalysisResult(String data, WordBoard board){
 		this.data = data;
 		this.board = board;
 		
 		char[][] boardData = board.getBoard();
-		int bottom = WordBoard.NUM_ROWS+1, top = 0;
+		int top = WordBoard.NUM_ROWS+1, bottom = 0;
 		int left = boardData[0].length, right = 0;
 		for(int i = 0; i < WordBoard.NUM_ROWS; i++){
 			for(int j = 0; j < boardData[0].length; j++){
 				char currChar = boardData[i][j];
 				if(currChar == '.'){
-					if(bottom == WordBoard.NUM_ROWS + 1){
-						bottom = i;
-					} else{
+					if(top == WordBoard.NUM_ROWS + 1){
 						top = i;
+					} else{
+						bottom = i;
 					}
 					if(j < left){
 						left = j;
@@ -35,8 +37,10 @@ public class WordAnalysisResult {
 			}
 		}
 		
-		this.height = top - bottom + 1;
+		this.height = bottom - top + 1;
 		this.width = right-left + 1;
+		this.top = top;
+		this.bottom = bottom;
 	}
 	
 	public int getHeight(){
@@ -49,6 +53,14 @@ public class WordAnalysisResult {
 	
 	public String getWord(){
 		return data;
+	}
+	
+	public int getTop(){
+		return top;
+	}
+	
+	public int getBottom(){
+		return bottom;
 	}
 	
 	public static enum Order implements Comparator<WordAnalysisResult>{
@@ -98,6 +110,46 @@ public class WordAnalysisResult {
 					return 1;
 				}
 				if(o1.getWidth() > o2.getWidth()){
+					return -1;
+				}
+				
+				if (o1.getWord().length() < o2.getWord().length()) {
+					return 1;
+				} else if (o1.getWord().length() == o2.getWord().length()) {
+					return 0;
+				}
+				
+				return -1;
+			}
+	    },
+	    
+	    ByTop(){
+	    	public int compare(WordAnalysisResult o1, WordAnalysisResult o2) {
+		    	
+	    		if(o1.getTop() > o2.getTop()){
+					return 1;
+				}
+				if(o1.getTop() < o2.getTop()){
+					return -1;
+				}
+				
+				if (o1.getWord().length() < o2.getWord().length()) {
+					return 1;
+				} else if (o1.getWord().length() == o2.getWord().length()) {
+					return 0;
+				}
+				
+				return -1;
+			}
+	    },
+	    
+	    ByBottom(){
+	    	public int compare(WordAnalysisResult o1, WordAnalysisResult o2) {
+		    	
+	    		if(o1.getBottom() < o2.getBottom()){
+					return 1;
+				}
+				if(o1.getBottom() > o2.getBottom()){
 					return -1;
 				}
 				

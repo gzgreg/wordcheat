@@ -73,6 +73,10 @@ public class WordBoard {
 				
 				char currChar = Character.toLowerCase(board[i][j]);
 				if((currTree = dict.contains(currChar)) != null){
+					char[][] copyBoard = deepCopy(board);
+					
+					copyBoard[i][j] = '.';
+					
 					if(currTree.isTerminal){
 						String s = "" + currTree.getChar();
 						Tree parentTree = currTree.getParent();
@@ -81,12 +85,10 @@ public class WordBoard {
 							s = parentTree.getChar() + s;
 							parentTree = parentTree.getParent();
 						}
-						WordAnalysisResult toAdd = new WordAnalysisResult(s, wordboard);
+						WordAnalysisResult toAdd = new WordAnalysisResult(s, new WordBoard(copyBoard));
 						toReturn.add(toAdd);
 					}
-					char[][] copyBoard = deepCopy(board);
 					
-					copyBoard[i][j] = '.';
 					WordBoard newBoard = new WordBoard(copyBoard);
 
 					ArrayList<WordAnalysisResult> returned = analyzeFrom(currTree, i, j, newBoard);

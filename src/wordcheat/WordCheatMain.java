@@ -8,13 +8,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class WordCheatMain {
+	
+	private static WordBoard board = null;
+	private static Tree dict = null;
+	private static ArrayList<WordAnalysisResult> analyzed = null;
+	private static ArrayList<String> wordList = null;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		PrintWriter out = new PrintWriter(System.out);
-		WordBoard board = null;
-		Tree dict = null;
-		ArrayList<WordAnalysisResult> analyzed = null;
 		
 		out.println("WordCheat started...");
 		out.flush();
@@ -28,45 +30,37 @@ public class WordCheatMain {
 					out.println("Imported board" + fileName);
 					
 					out.println(board);
-					out.flush();
 				} 
 				else if(input.startsWith("buildDict")){ //create dictionary tree
 					String fileName = input.substring(9).trim();
 					if(fileName.length() == 0){
 						fileName = "words.txt"; //default dictionary
 					}
+					
 					dict = (new DictBuilder(fileName)).buildDict();
 					out.println("Build complete.");
-					out.flush();
 				}
 				else if(input.equals("analyze")){ //analyze the current board
 					if(dict == null || board == null){
 						out.println("Error: must import a board and dictionary");
 					} else {
 						analyzed = WordBoard.analyze(dict, board);
+						
 						Collections.sort(analyzed, WordAnalysisResult.Order.ByLength);
-						out.println("Words found: " + analyzed.size());
+						
+						buildWordList();
+						
+						out.println("Words found: " + wordList.size());
 						out.println("Longest words: ");
-						
-						ArrayList<String> words = new ArrayList<String>();
-						int ii = 0;
-						
-						while(words.size() <= 8){
-							String currWord = analyzed.get(ii).getWord();
-							if(!words.contains(currWord)) words.add(currWord);
-							ii++;
-						}
-						
+
 						for(int i = 0; i < 8; i++){
-							out.println(words.get(i));
+							out.println(wordList.get(i));
 						}
-						out.flush();
 					}
 				}
-				else if(input.startsWith("how ")){
+				else if(input.startsWith("how ")){ //display how to do certain words
 					if(analyzed == null){
 						out.print("Need to analyze the board first!");
-						out.flush();
 					}
 					else{
 						String argument = input.substring(4);
@@ -91,16 +85,16 @@ public class WordCheatMain {
 											break;
 										}
 									} while(!wantToSee.equalsIgnoreCase("y") && !wantToSee.equalsIgnoreCase("n"));
+									if(wantToSee.equalsIgnoreCase("n")) break;
 								}
 							}
 						}
 						if(!found){
 							out.println("Not found!");
-							out.flush();
 						}
 					}
 				}
-				else if(input.startsWith("sort ")){
+				else if(input.startsWith("sort ")){ //sort words
 					if(analyzed == null){
 						out.println("Need to analyze the board first!");
 						out.flush();
@@ -120,22 +114,51 @@ public class WordCheatMain {
 							Collections.sort(analyzed, WordAnalysisResult.Order.ByWidth);
 							out.println("Sorting by width");
 							break;
+						case "top":
+							Collections.sort(analyzed, WordAnalysisResult.Order.ByTop);
+							out.println("Sorting by top");
+							break;
+						case "bottom":
+							Collections.sort(analyzed, WordAnalysisResult.Order.ByBottom);
+							out.println("Sorting by bottom");
+							break;
 						default:
 							out.println("Invalid argument: no changes");
 						}
-						
-						ArrayList<String> words = new ArrayList<String>();
-						int ii = 0;
-						while(words.size() <= 8){
-							String currWord = analyzed.get(ii).getWord();
-							if(!words.contains(currWord)) words.add(currWord);
-							ii++;
-						}
+						buildWordList();
 						
 						for(int i = 0; i < 8; i++){
-							out.println(words.get(i));
+							out.println(wordList.get(i));
 						}
-						out.flush();
+					}
+				}
+				else if(input.startsWith("get ")){
+					if(analyzed == null){
+						out.print("Need to analyze the board first!");
+					}
+					else {
+						String[] arguments = input.substring(4).split(" ");
+						int start = 0, end = 0;
+						boolean success = true;
+						try{
+							start = Integer.parseInt(arguments[0]);
+							end = Integer.parseInt(arguments[1]);
+						} catch(NumberFormatException e){
+							out.println("Incorrect formatting.");
+							success = false;
+						}
+						finally{
+							if(start < 0 || end >= wordList.size()){
+								success = false;
+								out.println("Out of range.");
+							}
+							if(success){
+								for(int i = start; i < end; i++){
+									out.print(wordList.get(i) + " ");
+									out.println();
+								}
+							}
+						}
 					}
 				}
 				else if(input.equals("quit")){ //Quit
@@ -146,8 +169,9 @@ public class WordCheatMain {
 				}
 				else{
 					out.println("Invalid input");
-					out.flush();
 				}
+				
+				out.flush();
 			} catch(Exception e){
 				out.println("Error!");
 				out.println(e.getMessage());
@@ -155,6 +179,15 @@ public class WordCheatMain {
 			}
 		}
 
+	}
+	
+	public static void buildWordList(){
+		wordList = new ArrayList<String>();
+		for(int i = 0; i < analyzed.size(); i++){
+			if(!(wordList.contains(analyzed.get(i).getWord()))){
+				wordList.add(analyzed.get(i).getWord());
+			}
+		}
 	}
 
 }
