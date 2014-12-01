@@ -22,6 +22,8 @@ Capitals denote letters under your control.
 
 `analyze` analyzes the current board given, and gives a list of possible words from the position given.
 
-`sort` sorts the word list. Can be sorted by height, length, and width (use `sort height`).
+`sort` sorts the word list. Can be sorted by height, length, width, top, and bottom (use `sort height`).
 
 `how` shows the spots taken for a specific word given in the argument.
+
+`get` takes two numerical arguments (use `get 0 50`), and shows the words in the current sorted order from the first argument to the second argument (the 1st to 51st words in this case).
