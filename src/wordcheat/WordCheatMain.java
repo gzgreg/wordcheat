@@ -1,7 +1,6 @@
 package wordcheat;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class WordCheatMain {
 	private static ArrayList<WordAnalysisResult> analyzed = null;
 	private static ArrayList<String> wordList = null;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		PrintWriter out = new PrintWriter(System.out);
 		
@@ -161,6 +160,37 @@ public class WordCheatMain {
 						}
 					}
 				}
+				else if(input.equals("win")){
+					if(analyzed == null){
+						out.print("Need to analyze the board first!");
+					}
+					else{
+						int winRow = WordBoard.NUM_ROWS - 1;
+						char[][] originalBoard = board.getBoard();
+						for(int i = 0; i < originalBoard[0].length; i++){
+							if(!Character.isUpperCase(originalBoard[0][i])){ //checks if top row is all uppercase
+								winRow = 0;
+							}
+						}
+						
+						ArrayList<String> winningWords = new ArrayList<String>();
+						ArrayList<WordAnalysisResult> resortedWordList = (ArrayList<WordAnalysisResult>) analyzed.clone();
+						Collections.sort(resortedWordList, winRow == 0 ? WordAnalysisResult.Order.ByTop : WordAnalysisResult.Order.ByBottom); //sorts depending on winning row
+						
+						for(int i = 0; i < resortedWordList.size(); i++){
+							WordAnalysisResult result = resortedWordList.get(i);
+							if(winRow == 0 ? result.getTop() == 0 : result.getBottom() == WordBoard.NUM_ROWS - 1){
+								if(!winningWords.contains(result.getWord())) winningWords.add(result.getWord());
+							}
+							else break; //note that sorting allows us to do this
+						}
+						
+						out.println("Winning words: ");
+						for(int i = 0; i < winningWords.size(); i++){
+							out.print(winningWords.get(i) + " ");
+						}
+					}
+				}
 				else if(input.equals("quit")){ //Quit
 					out.println("Closing.");
 					out.close();
@@ -181,7 +211,7 @@ public class WordCheatMain {
 
 	}
 	
-	public static void buildWordList(){
+	private static void buildWordList(){
 		wordList = new ArrayList<String>();
 		for(int i = 0; i < analyzed.size(); i++){
 			if(!(wordList.contains(analyzed.get(i).getWord()))){
