@@ -47,7 +47,7 @@ public class WordBoard {
 					copyBoard[i][j] = '.';
 					WordBoard newBoard = new WordBoard(copyBoard);
 					
-					ArrayList<WordAnalysisResult> returned = analyzeFrom(dict.contains(Character.toLowerCase(charArray[i][j])), i, j, newBoard);
+					ArrayList<WordAnalysisResult> returned = analyzeFrom(dict.contains(Character.toLowerCase(charArray[i][j])), i, j, newBoard, 0);
 					
 					toReturn.addAll(returned);
 				}
@@ -57,10 +57,10 @@ public class WordBoard {
 		return toReturn;
 	}
 	
-	private static ArrayList<WordAnalysisResult> analyzeFrom(Tree dict, int row, int col, WordBoard wordboard){
+	private static ArrayList<WordAnalysisResult> analyzeFrom(Tree dict, int row, int col, WordBoard wordboard, int newLetters){
 		Tree currTree = dict;
 		ArrayList<WordAnalysisResult> toReturn = new ArrayList<WordAnalysisResult>();
-		char[][] board = wordboard.board;		
+		char[][] board = wordboard.getBoard();		
 		
 		for(int i = row-1; i <= row+1; i++){
 			if(i < 0 || i > NUM_ROWS - 1){
@@ -73,6 +73,9 @@ public class WordBoard {
 				
 				char currChar = Character.toLowerCase(board[i][j]);
 				if((currTree = dict.contains(currChar)) != null){
+					int newnewLetters;
+					if(Character.isLowerCase(board[i][j])) newnewLetters = newLetters + 1;
+					else newnewLetters = newLetters;
 					char[][] copyBoard = deepCopy(board);
 					
 					copyBoard[i][j] = '.';
@@ -85,13 +88,14 @@ public class WordBoard {
 							s = parentTree.getChar() + s;
 							parentTree = parentTree.getParent();
 						}
-						WordAnalysisResult toAdd = new WordAnalysisResult(s, new WordBoard(copyBoard));
+						
+						WordAnalysisResult toAdd = new WordAnalysisResult(s, new WordBoard(copyBoard), newnewLetters);
 						toReturn.add(toAdd);
 					}
 					
 					WordBoard newBoard = new WordBoard(copyBoard);
-
-					ArrayList<WordAnalysisResult> returned = analyzeFrom(currTree, i, j, newBoard);
+					
+					ArrayList<WordAnalysisResult> returned = analyzeFrom(currTree, i, j, newBoard, newnewLetters);
 					toReturn.addAll(returned);
 				}
 			}

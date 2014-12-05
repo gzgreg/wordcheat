@@ -10,10 +10,12 @@ public class WordAnalysisResult {
 	private int width;
 	private int top;
 	private int bottom;
+	private int newLetters;
 	
-	public WordAnalysisResult(String data, WordBoard board){
+	public WordAnalysisResult(String data, WordBoard board, int newLetters){
 		this.data = data;
 		this.board = board;
+		this.newLetters = newLetters;
 		
 		char[][] boardData = board.getBoard();
 		int top = WordBoard.NUM_ROWS+1, bottom = 0;
@@ -61,6 +63,10 @@ public class WordAnalysisResult {
 	
 	public int getBottom(){
 		return bottom;
+	}
+	
+	public int getNewLetters(){
+		return newLetters;
 	}
 	
 	public static enum Order implements Comparator<WordAnalysisResult>{
@@ -150,6 +156,26 @@ public class WordAnalysisResult {
 					return 1;
 				}
 				if(o1.getBottom() > o2.getBottom()){
+					return -1;
+				}
+				
+				if (o1.getWord().length() < o2.getWord().length()) {
+					return 1;
+				} else if (o1.getWord().length() == o2.getWord().length()) {
+					return 0;
+				}
+				
+				return -1;
+			}
+	    },
+	    
+	    ByNewLetters(){
+	    	public int compare(WordAnalysisResult o1, WordAnalysisResult o2) {
+		    	
+	    		if(o1.getNewLetters() < o2.getNewLetters()){
+					return 1;
+				}
+				if(o1.getNewLetters() > o2.getNewLetters()){
 					return -1;
 				}
 				

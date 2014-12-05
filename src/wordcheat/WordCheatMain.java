@@ -121,6 +121,10 @@ public class WordCheatMain {
 							Collections.sort(analyzed, WordAnalysisResult.Order.ByBottom);
 							out.println("Sorting by bottom");
 							break;
+						case "newletters":
+							Collections.sort(analyzed, WordAnalysisResult.Order.ByNewLetters);
+							out.println("Sorting by new letters");
+							break;
 						default:
 							out.println("Invalid argument: no changes");
 						}
