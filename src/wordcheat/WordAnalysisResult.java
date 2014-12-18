@@ -69,6 +69,10 @@ public class WordAnalysisResult {
 		return newLetters;
 	}
 	
+	public char[][] getBoard(){
+		return board.getBoard();
+	}
+	
 	public static enum Order implements Comparator<WordAnalysisResult>{
 	    
 	    ByLength(){

@@ -29,3 +29,5 @@ Capitals denote letters under your control.
 `get` takes two numerical arguments (use `get 0 50`), and shows the words in the current sorted order from the first argument to the second argument (the 1st to 51st words in this case).
 
 `win` searches for winning words. Determines which side of the board you are on based on capitalized letters, so input board must be valid for this to work properly.
+
+`add` adds a word to the area you control (equivalent to capitalizing). Allows you to pick a particular configuration of the word. This doesn't re-analyze the board.

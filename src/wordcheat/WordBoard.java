@@ -36,6 +36,16 @@ public class WordBoard {
 		this.board = data.clone();
 	}
 	
+	public void addWord(char[][] board){
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < board[0].length; j++){
+				if(board[i][j] == '.'){
+					this.board[i][j] = Character.toUpperCase(this.board[i][j]);
+				}
+			}
+		}
+	}
+	
 	public static ArrayList<WordAnalysisResult> analyze(Tree dict, WordBoard board){
 		ArrayList<WordAnalysisResult> toReturn = new ArrayList<WordAnalysisResult>();
 		char[][] charArray = board.board;

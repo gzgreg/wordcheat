@@ -29,6 +29,9 @@ public class WordCheatMain {
 					out.println("Imported board" + fileName);
 					
 					out.println(board);
+					
+					analyzed = null;
+					wordList = null;
 				} 
 				else if(input.startsWith("buildDict")){ //create dictionary tree
 					String fileName = input.substring(9).trim();
@@ -193,7 +196,36 @@ public class WordCheatMain {
 						for(int i = 0; i < winningWords.size(); i++){
 							out.print(winningWords.get(i) + " ");
 						}
+						out.println();
 					}
+				}
+				else if(input.startsWith("add ")){
+					String toAdd = input.substring(4);
+					boolean found = false;
+					for(int i = 0; i < analyzed.size(); i++){
+						WordAnalysisResult curr = analyzed.get(i);
+						if(curr.getWord().equals(toAdd)){
+							out.println("Do you want to add the following configuration? (Y/N)");
+							out.println(curr);
+							out.flush();
+							String response;
+							do{
+								response = in.readLine();
+							} while(!(response.equalsIgnoreCase("y") || response.equalsIgnoreCase("n")));
+							
+							if(response.equalsIgnoreCase("y")){
+								board.addWord(curr.getBoard());
+								out.println("Word added");
+								out.println(board);
+								found = true;
+								analyzed = null;
+								wordList = null;
+								break;
+							}
+							
+						}
+					}
+					if(!found) out.println("Word not found!");
 				}
 				else if(input.equals("quit")){ //Quit
 					out.println("Closing.");
