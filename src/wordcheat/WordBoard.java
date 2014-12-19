@@ -10,6 +10,7 @@ import java.util.Arrays;
 public class WordBoard {
 	
 	private char[][] board;
+	private int winRow;
 	public static final int NUM_ROWS = 13;
 	
 	public WordBoard(String inputFile) throws IOException{
@@ -30,10 +31,25 @@ public class WordBoard {
 		} while((line = input.readLine()) != null);
 		
 		input.close();
+		
+		winRow = NUM_ROWS - 1;
+		for(int i = 0; i < this.board[0].length; i++){
+			if(!Character.isUpperCase(this.board[0][i])){ //checks if top row is all uppercase
+				winRow = 0;
+			}
+		}
 	}
 	
 	public WordBoard(char[][] data) {
 		this.board = data.clone();
+		
+		winRow = NUM_ROWS - 1;
+		
+		for(int i = 0; i < this.board[0].length; i++){
+			if(!Character.isUpperCase(this.board[0][i])){ //checks if top row is all uppercase
+				winRow = 0;
+			}
+		}
 	}
 	
 	public void addWord(char[][] board){
@@ -48,7 +64,7 @@ public class WordBoard {
 	
 	public static ArrayList<WordAnalysisResult> analyze(Tree dict, WordBoard board){
 		ArrayList<WordAnalysisResult> toReturn = new ArrayList<WordAnalysisResult>();
-		char[][] charArray = board.board;
+		char[][] charArray = board.getBoard();
 		for(int i = 0; i < charArray.length; i++){
 			for(int j = 0; j < charArray[0].length; j++){
 				if(Character.isUpperCase(charArray[i][j])){
@@ -114,8 +130,61 @@ public class WordBoard {
 		return toReturn;
 	}
 	
+	public static WordBoard analyzeWin(Tree dict, WordBoard board, int winRow){
+		char[][] returnBoard = board.getBoard();
+		char[][] originalBoard = board.getBoard();
+		for(int i = 0; i < NUM_ROWS - 1; i++){
+			for(int j = 0; j < originalBoard[0].length; j++){
+				boolean isWinning = analyzeWinFrom(dict.contains(Character.toLowerCase(originalBoard[i][j])), i, j, winRow, board);
+				if(isWinning) returnBoard[i][j] = '.';
+			}
+		}
+		
+		return new WordBoard(returnBoard);
+	}
+	
+	private static boolean analyzeWinFrom(Tree dict, int row, int col, int winRow, WordBoard wordboard){
+		Tree currTree = dict;
+		char[][] board = wordboard.getBoard();		
+		
+		for(int i = row-1; i <= row+1; i++){
+			if(i < 0 || i > NUM_ROWS - 1){
+				continue;
+			}
+			for(int j = col-1; j <= col+1; j++){
+				if(j < 0 || j > board[0].length - 1){
+					continue;
+				}
+				
+				char currChar = Character.toLowerCase(board[i][j]);
+				if((currTree = dict.contains(currChar)) != null){
+					char[][] copyBoard = deepCopy(board);
+					
+					copyBoard[i][j] = '.';
+					
+					if(currTree.isTerminal){
+						if(i == winRow){
+							return true;
+						}
+					}
+					
+					WordBoard newBoard = new WordBoard(copyBoard);
+					
+					boolean returned = analyzeWinFrom(currTree, i, j, winRow, newBoard);
+					if(returned) return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public char[][] getBoard(){
 		return deepCopy(board);
+	}
+	
+	public int getWinRow(){
+		return winRow;
 	}
 	
 	private static char[][] deepCopy(char[][] original) {

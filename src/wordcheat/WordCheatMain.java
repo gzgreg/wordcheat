@@ -172,13 +172,7 @@ public class WordCheatMain {
 						out.print("Need to analyze the board first!");
 					}
 					else{
-						int winRow = WordBoard.NUM_ROWS - 1;
-						char[][] originalBoard = board.getBoard();
-						for(int i = 0; i < originalBoard[0].length; i++){
-							if(!Character.isUpperCase(originalBoard[0][i])){ //checks if top row is all uppercase
-								winRow = 0;
-							}
-						}
+						int winRow = board.getWinRow();
 						
 						ArrayList<String> winningWords = new ArrayList<String>();
 						ArrayList<WordAnalysisResult> resortedWordList = (ArrayList<WordAnalysisResult>) analyzed.clone();
@@ -198,6 +192,12 @@ public class WordCheatMain {
 						}
 						out.println();
 					}
+				}
+				
+				else if(input.equals("winFrom")){
+					WordBoard winSpots = WordBoard.analyzeWin(dict, board, board.getWinRow());
+					out.println("Winning locations marked with .");
+					out.println(winSpots);
 				}
 				else if(input.startsWith("add ")){
 					String toAdd = input.substring(4);

@@ -30,4 +30,6 @@ Capitals denote letters under your control.
 
 `win` searches for winning words. Determines which side of the board you are on based on capitalized letters, so input board must be valid for this to work properly.
 
+`winFrom` shows a list of spots that will allow you to win the game on the next move.
+
 `add` adds a word to the area you control (equivalent to capitalizing). Allows you to pick a particular configuration of the word. This doesn't re-analyze the board.
