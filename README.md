@@ -32,4 +32,6 @@ Capitals denote letters under your control.
 
 `winFrom` shows a list of spots that will allow you to win the game on the next move.
 
+`opponentWinFrom` shows a list of spots that will allow the opponent to win in one move.
+
 `add` adds a word to the area you control (equivalent to capitalizing). Allows you to pick a particular configuration of the word. This doesn't re-analyze the board.

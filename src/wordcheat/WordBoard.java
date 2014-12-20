@@ -89,7 +89,7 @@ public class WordBoard {
 		char[][] board = wordboard.getBoard();		
 		
 		for(int i = row-1; i <= row+1; i++){
-			if(i < 0 || i > NUM_ROWS - 1){
+			if(i < 0 || i >= NUM_ROWS){
 				continue;
 			}
 			for(int j = col-1; j <= col+1; j++){
@@ -133,7 +133,7 @@ public class WordBoard {
 	public static WordBoard analyzeWin(Tree dict, WordBoard board, int winRow){
 		char[][] returnBoard = board.getBoard();
 		char[][] originalBoard = board.getBoard();
-		for(int i = 0; i < NUM_ROWS - 1; i++){
+		for(int i = 0; i < NUM_ROWS; i++){
 			for(int j = 0; j < originalBoard[0].length; j++){
 				boolean isWinning = analyzeWinFrom(dict.contains(Character.toLowerCase(originalBoard[i][j])), i, j, winRow, board);
 				if(isWinning) returnBoard[i][j] = '.';
@@ -148,7 +148,7 @@ public class WordBoard {
 		char[][] board = wordboard.getBoard();		
 		
 		for(int i = row-1; i <= row+1; i++){
-			if(i < 0 || i > NUM_ROWS - 1){
+			if(i < 0 || i >= NUM_ROWS){
 				continue;
 			}
 			for(int j = col-1; j <= col+1; j++){

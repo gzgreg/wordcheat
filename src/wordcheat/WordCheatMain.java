@@ -199,6 +199,14 @@ public class WordCheatMain {
 					out.println("Winning locations marked with .");
 					out.println(winSpots);
 				}
+				
+				else if(input.equals("opponentWinFrom")){
+					int winRow = board.getWinRow() == 0 ? WordBoard.NUM_ROWS - 1 : 0;
+					WordBoard opponentWinSpots = WordBoard.analyzeWin(dict, board, winRow);
+					
+					out.println("Opponent winning spots marked with .");
+					out.println(opponentWinSpots);
+				}
 				else if(input.startsWith("add ")){
 					String toAdd = input.substring(4);
 					boolean found = false;
